@@ -1,0 +1,64 @@
+INPUT: 
+-Insieme degli esami (ESAMI) {e1 , e2 , .... , en}
+- #crediti (m)
+
+OUTPUT:
+- Sottoinsieme di ESAMI, tale che:
+	* Somma ESAMI.crediti == m
+	* Media ESAMI.voto sia massima
+	
+APPROCCIO 1 (fail) --> N!
+
+Ad ogni livello della ricorsione inserisco un esame in PARZIALE e per decidere quale li provo tutti (simile al metodo per tirare fuori gli anagrammi)
+
+SOLUZIONE PARZIALE = ad ogni livello L, PARZIALE sarà un sottoinsieme di esattamente L esami 
+
+GENERAZIONE SOTTOPROBLEMI --> aggiungere un nuovo esame a PARZIALE (tra gli esami che non sono stati ancora aggiunti) --> PARZIALE = PARZIALE + ESAMI(i)
+
+L = 0 --> N scelte possibili
+		PARZIALE = {e1}
+			L = 1
+				PARZIALE = {e1,e2}
+					L = 2
+						PARZIALE = {e1,e2,e3}
+							[...]
+		
+			L = 1
+				PARZIALE = {e1,e3}
+					L = 2
+						PARZIALE = {e1,e3,e2}
+							[...]
+		PARZIALE = {e2}
+			L = 1
+				PARZIALE = {e2,e1}
+					[...]
+	
+e così via.....
+
+CASI TERMINALI
+
+1) Quando finiscono gli esami --> L = N
+
+2) se PARZIALE.sommaCrediti() == m --> potrebbe essere una soluzione, controllo se è la soluzione migliore
+											PARZIALE.calcolaMedia > di quello di prima
+
+	ELSE SE PARZIALE.sommaCrediti() > m --> non può essere una soluzione ed esco dalla ricorsione
+						return;
+						
+
+APPROCCIO 2 (BETTER) --> 2 ^ N
+
+Generare i sottoproblemi 1 per volta, scorrendo l'insieme di esami di partenza in ordine, decidendo per ogni esame: 
+ * se debba essere inserito
+ * se non debba essere inserito
+ 
+ IL LIVELLO DELLA RICORSIONE == ESAME DA CONSIDERARE
+ 
+ 	L = 0 --> 2 scelte possibili
+ 		PARZIALE = {e1}
+ 		PARZIALE = {} "non contiene e1"
+ 		
+ 			L = 1
+ 				PARZIALE = {e1 , e2}
+ 				or
+ 				PARZIALE = {e1}
